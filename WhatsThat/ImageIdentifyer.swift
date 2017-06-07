@@ -14,6 +14,7 @@ class ImageIdentifyer: UIViewController {
     
     @IBOutlet weak var pictureView: UIImageView!
     @IBOutlet weak var pictureLabel: UILabel!
+    @IBOutlet weak var confidenceLabel: UILabel!
     
     var imageData: UIImage!
     
@@ -34,7 +35,9 @@ class ImageIdentifyer: UIViewController {
         guard let results = request.results as? [VNClassificationObservation]
             else { fatalError("huh") }
         
-        pictureLabel.text = "\(results[0].identifier) - \(results[0].confidence)"
+        let topResult = results[0]
+        pictureLabel.text = topResult.identifier
+        confidenceLabel.text = String(topResult.confidence)
     }
     
     func convertCIImageToCGImage(inputImage: CIImage) -> CGImage! {

@@ -46,6 +46,7 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="lKv-UE-d9U">
+                        <barButtonItem key="leftBarButtonItem" systemItem="camera" id="Vpe-EA-sdK"/>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="13y-yF-tls">
                             <connections>
                                 <action selector="importImage:" destination="kTA-b9-dTP" id="lYR-3J-o4S"/>
@@ -84,18 +85,28 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="83L-f1-bcz">
+                                <rect key="frame" x="0.0" y="588" width="414" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="83L-f1-bcz" firstAttribute="centerX" secondItem="qq0-bR-9pY" secondAttribute="centerX" id="Dii-nd-Ltq"/>
                             <constraint firstItem="vxd-cg-ofU" firstAttribute="centerX" secondItem="qq0-bR-9pY" secondAttribute="centerX" id="Hxj-NH-UpU"/>
                             <constraint firstItem="vxd-cg-ofU" firstAttribute="width" secondItem="qq0-bR-9pY" secondAttribute="width" id="JuW-Q4-uq7"/>
                             <constraint firstItem="vxd-cg-ofU" firstAttribute="centerY" secondItem="qq0-bR-9pY" secondAttribute="centerY" id="gbo-xx-JYQ"/>
                             <constraint firstItem="4tT-nX-ySw" firstAttribute="centerX" secondItem="qq0-bR-9pY" secondAttribute="centerX" id="i2w-68-ZwR"/>
+                            <constraint firstItem="83L-f1-bcz" firstAttribute="top" secondItem="4tT-nX-ySw" secondAttribute="bottom" constant="8" id="lEz-Ek-GvP"/>
+                            <constraint firstItem="83L-f1-bcz" firstAttribute="width" secondItem="qq0-bR-9pY" secondAttribute="width" id="lST-2J-4PE"/>
                             <constraint firstItem="4tT-nX-ySw" firstAttribute="width" secondItem="qq0-bR-9pY" secondAttribute="width" id="mBz-kI-4mY"/>
                             <constraint firstItem="4tT-nX-ySw" firstAttribute="top" secondItem="vxd-cg-ofU" secondAttribute="bottom" constant="91" id="zo2-aw-fx1"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="confidenceLabel" destination="83L-f1-bcz" id="Pgh-OJ-8de"/>
                         <outlet property="pictureLabel" destination="4tT-nX-ySw" id="8mR-sv-1j3"/>
                         <outlet property="pictureView" destination="vxd-cg-ofU" id="kBi-0h-Ndu"/>
                     </connections>
