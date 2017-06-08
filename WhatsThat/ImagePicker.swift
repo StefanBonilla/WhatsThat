@@ -7,14 +7,34 @@
 //
 
 import UIKit
+import Vision
+import CoreML
 
 class ImagePicker: UITableViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     
     var images: [UIImage] = []
+    var imageUrls: [URL] = []
+    
+    let model = try? VNCoreMLModel(for: Resnet50().model)
+    var request: VNCoreMLRequest!
+    var handler: VNImageRequestHandler!
+    
+    var selectedRow: Int?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.request = VNCoreMLRequest(model: model!, completionHandler: identifyImage)
     }
+    
+    // MARK: - ML
+    
+    func identifyImage(request: VNRequest, error: Error?) {
+        guard let results = request.results as? [VNClassificationObservation] else { fatalError("huh") }
+        let topResult = results[0]
+        performSegue(withIdentifier: "identifyImage", sender: topResult)
+    }
+    
+    // MARK: - Image Picker
     
     @IBAction func importImage(_ sender: Any) {
         let image = UIImagePickerController()
@@ -25,12 +45,11 @@ class ImagePicker: UITableViewController, UINavigationControllerDelegate, UIImag
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            images.append(image)
-            self.tableView.reloadData()
-        } else {
-            print("ERROR")
-        }
+        let imageUrl = info[UIImagePickerControllerImageURL] as! URL
+        let image = info[UIImagePickerControllerOriginalImage] as! UIImage
+        images.append(image)
+        imageUrls.append(imageUrl)
+        self.tableView.reloadData()
         self.navigationController?.dismiss(animated: true, completion: nil)
     }
     
@@ -43,30 +62,28 @@ class ImagePicker: UITableViewController, UINavigationControllerDelegate, UIImag
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return images.count
     }
-
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ThumbnailCell", for: indexPath) as! ImageListCell
-        
         cell.thumbnail.image = images[indexPath.row]
-
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "identifyImage", sender: tableView.cellForRow(at: indexPath) as! ImageListCell)
+        self.selectedRow = indexPath.row
+        self.handler = VNImageRequestHandler(url: imageUrls[indexPath.row])
+        try? handler.perform([request])
     }
  
     
     // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "identifyImage" {
             let vc = segue.destination as! ImageIdentifyer
-            let cell = sender as! ImageListCell
-            let indexPath = self.tableView.indexPath(for: cell)!
-            vc.imageData = images[indexPath.row]
+            let result = sender as! VNClassificationObservation
+            vc.imageData = images[self.selectedRow!]
+            vc.resultName = result.identifier
+            vc.resultConfidence = String(result.confidence)
         }
     }
 
