@@ -25,7 +25,7 @@ class ImagePicker: UITableViewController, UINavigationControllerDelegate, UIImag
         self.request = VNCoreMLRequest(model: model!, completionHandler: identifyImage)
     }
     
-    // MARK: - ML
+    // MARK: - Vision/CoreML Handler
     
     func identifyImage(request: VNRequest, error: Error?) {
         guard let results = request.results as? [VNClassificationObservation] else { fatalError("huh") }
