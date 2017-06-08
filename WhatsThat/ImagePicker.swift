@@ -17,7 +17,6 @@ class ImagePicker: UITableViewController, UINavigationControllerDelegate, UIImag
     
     let model = try? VNCoreMLModel(for: Resnet50().model)
     var request: VNCoreMLRequest!
-    var handler: VNImageRequestHandler!
     
     var selectedRow: Int?
     
@@ -71,7 +70,7 @@ class ImagePicker: UITableViewController, UINavigationControllerDelegate, UIImag
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.selectedRow = indexPath.row
-        self.handler = VNImageRequestHandler(url: imageUrls[indexPath.row])
+        let handler = VNImageRequestHandler(url: imageUrls[indexPath.row])
         try? handler.perform([request])
     }
  
